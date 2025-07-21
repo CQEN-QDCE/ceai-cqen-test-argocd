@@ -1,0 +1,13 @@
+cluster_name        = ""
+environment         = ""
+
+aws_profile         = ""
+cluster_region      = ""
+assume_role_arn     = null
+
+repo_github_url     = ""
+target_revision     = "" 
+chart_path          = ""
+server_image        = ""
+image_tag           = ""
+acm_certificate_arn = ""
