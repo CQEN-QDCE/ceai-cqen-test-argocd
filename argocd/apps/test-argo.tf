@@ -43,13 +43,7 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
           prune    = true
           selfHeal = true
         }
-        /*syncOptions = [
-          "CreateNamespace=true"
-        ] */
       }
     }
   }
-  /*depends_on = [
-    kubernetes_manifest.argocd_project
-  ] */
 }
