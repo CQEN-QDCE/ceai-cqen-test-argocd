@@ -16,7 +16,7 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
       }
     }
     spec = {
-      project = "${terraform.workspace}"
+      project = "icp-bidon"
       source = {
         repoURL        = var.repo_github_url
         targetRevision = var.target_revision
@@ -36,20 +36,20 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
       }
       destination = {
         server    = "https://kubernetes.default.svc"
-        namespace = "xroad-${terraform.workspace}"
+        namespace = "xroad-icp-bidon"
       }
       syncPolicy = {
         automated = {
           prune    = true
           selfHeal = true
         }
-        syncOptions = [
+        /*syncOptions = [
           "CreateNamespace=true"
-        ]
+        ] */
       }
     }
   }
-  depends_on = [
+  /*depends_on = [
     kubernetes_manifest.argocd_project
-  ]
+  ] */
 }
