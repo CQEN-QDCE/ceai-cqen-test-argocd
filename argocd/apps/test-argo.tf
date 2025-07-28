@@ -16,7 +16,7 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
       }
     }
     spec = {
-      project = "icp-bidon"
+      project = var.project_name
       source = {
         repoURL        = var.repo_github_url
         targetRevision = var.target_revision
