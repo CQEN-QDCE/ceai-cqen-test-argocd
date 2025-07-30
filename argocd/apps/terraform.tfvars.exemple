@@ -5,6 +5,9 @@ aws_profile         = ""
 cluster_region      = ""
 assume_role_arn     = null
 
+project_name        = ""
+namespace           = ""
+
 repo_github_url     = ""
 target_revision     = "" 
 chart_path          = ""

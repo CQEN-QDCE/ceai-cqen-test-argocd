@@ -1,4 +1,5 @@
 # tflint-ignore: terraform_unused_declarations
+
 variable "cluster_name" {
   description = "Name of cluster"
   type        = string
@@ -28,6 +29,16 @@ variable "assume_role_arn" {
   description = "The ARN of the role to assume"
   default     = null
 }
+
+variable "project_name" {
+  description = "Le nom du projet"
+  type        = string
+} 
+
+variable "namespace" {
+  description = "Le namespace dans lequel le projet sera deployé"
+  type        = string
+} 
 
 variable "workload_account_type" {
   type        = string

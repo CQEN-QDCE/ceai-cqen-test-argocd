@@ -3,7 +3,6 @@
 ################################################################################
 
 resource "kubernetes_manifest" "test_argo_app_of_apps" {
-  #for_each = toset(var.stages)
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
@@ -12,7 +11,7 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
       namespace = "argocd"
       labels = {
         "app.kubernetes.io/name"    = "test-argocd-${terraform.workspace}"
-        "app.kubernetes.io/part-of" = "xroad-${terraform.workspace}"
+        "app.kubernetes.io/part-of" = var.namespace
       }
     }
     spec = {
@@ -36,7 +35,7 @@ resource "kubernetes_manifest" "test_argo_app_of_apps" {
       }
       destination = {
         server    = "https://kubernetes.default.svc"
-        namespace = "xroad-icp-bidon"
+        namespace = var.namespace
       }
       syncPolicy = {
         automated = {
