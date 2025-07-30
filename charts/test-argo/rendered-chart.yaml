@@ -1,0 +1,107 @@
+---
+# Source: deploy-argo/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-argocd
+  labels:
+    helm.sh/chart: deploy-argo-0.1.0
+    app.kubernetes.io/name: test-argocd
+    app.kubernetes.io/instance: rusga
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: deploy-argo/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-argocd
+  labels:
+    helm.sh/chart: deploy-argo-0.1.0
+    app.kubernetes.io/name: test-argocd
+    app.kubernetes.io/instance: rusga
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: test-argocd
+    app.kubernetes.io/instance: rusga
+---
+# Source: deploy-argo/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-argocd
+  labels:
+    helm.sh/chart: deploy-argo-0.1.0
+    app.kubernetes.io/name: test-argocd
+    app.kubernetes.io/instance: rusga
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: test-argocd
+      app.kubernetes.io/instance: rusga
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: deploy-argo-0.1.0
+        app.kubernetes.io/name: test-argocd
+        app.kubernetes.io/instance: rusga
+        app.kubernetes.io/version: "1.0.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: test-argocd
+      containers:
+        - name: deploy-argo
+          image: "juliozohar/test-deploy-helm:0.0.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+---
+# Source: deploy-argo/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-argocd
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: ""
+    alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/load-balancer-attributes: "routing.http.drop_invalid_header_fields.enabled=true"
+    alb.ingress.kubernetes.io/scheme: "internal"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/backend-protocol: "HTTP"
+    alb.ingress.kubernetes.io/subnets: ""
+    alb.ingress.kubernetes.io/success-codes: 200-302
+spec:
+  ingressClassName: alb
+  rules:
+     - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-argocd-icp-bidon-test-deploy-helm
+                port:
+                  number: 3000

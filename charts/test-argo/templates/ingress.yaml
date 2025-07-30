@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name }}
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.annotations.acmCertificateArn | quote }}
+    alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.annotations.listenPorts | quote }}
+    alb.ingress.kubernetes.io/ssl-redirect: {{ .Values.ingress.annotations.sslRedirect | quote }}
+    alb.ingress.kubernetes.io/load-balancer-attributes: {{ .Values.ingress.annotations.loadBalancerAttributes | quote }}
+    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.annotations.scheme | quote }}
+    alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
+    alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.annotations.backendProtocol | quote }}
+    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.annotations.subnetAllowList | quote }}
+    alb.ingress.kubernetes.io/success-codes: 200-302
+spec:
+  ingressClassName: {{ .Values.ingress.class }}
+  rules:
+     - http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ .Values.ingress.serviceName }}
+                port:
+                  number: {{ .Values.ingress.servicePort }}
