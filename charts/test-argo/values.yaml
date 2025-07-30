@@ -75,7 +75,7 @@ ingress:
   tlsSecretName: testargo-tls
   path: "/"
   pathType: Prefix
-  serviceName: test-argocd-icp-bidon-test-deploy-helm
+  serviceName: test-argocd-svc
   servicePort: 3000
   servicePortName: testargo-port
 
